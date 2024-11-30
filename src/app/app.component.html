@@ -1,4 +1,4 @@
 
-<app-user-list></app-user-list> <!-- This renders the user list component -->
-
-<router-outlet />
+<product-list [product]="'sahab'" (messageEvent)="receiveMessage($event)"></product-list>
+<p>{{receivedMessage}}</p>
+<router-outlet/>
