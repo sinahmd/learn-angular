@@ -29,7 +29,7 @@ export class ProductListComponent {
 
 //   product!: Product;
 
-//   private _isEditable: boolean = false;
+//   private _isEditable: boolean = false;  
 //   // private productService: ProductService;
 
 //   constructor(private productService: ProductService) {
