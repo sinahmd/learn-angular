@@ -10,47 +10,80 @@ interface TableRow {
 
 @Component({
   selector: 'tables',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './tables.component.html',
-  styleUrl: './tables.component.scss'
+  styleUrls: ['./tables.component.scss'],
 })
 export class TablesComponent {
-  table1: TableRow[] = [
-    { name: 'airPod', price: 1, weight: 200 },
-    { name: 'casio', price: 2, weight: 100 },
-    { name: 'dell', price: 3, weight: 50 },
-  ];
+  
+  tables: { [key: string]: TableRow[] } = {
+    table1: [
+      { name: 'airPod', price: 1, weight: 200 },
+      { name: 'casio', price: 2, weight: 100 },
+      { name: 'dell', price: 3, weight: 50 },
+    ],
+    table2: [
+      { name: 'msi', price: 5, weight: 300 },
+      { name: 'asus', price: 4, weight: 150 },
+      { name: 'razor', price: 6, weight: 400 },
+    ],
+  };
 
-  table2: TableRow[] = [
-    { name: 'msi', price: 5, weight: 300 },
-    { name: 'asus', price: 4, weight: 150 },
-    { name: 'razor', price: 6, weight: 400 },
-  ];
+  editingStates: { [key: string]: { editingIndex: number | null; editingRow: TableRow | null } } = {
+    table1: { editingIndex: null, editingRow: null },
+    table2: { editingIndex: null, editingRow: null },
+  };
 
   totalPrice: number | null = null;
 
-
-  addRow(table: TableRow[]): void {
-    table.push({ name: '', price: 0, weight: 0 });
+  startEditing(tableKey: string, index: number, row: TableRow): void {
+    this.editingStates[tableKey] = {
+      editingIndex: index,
+      editingRow: { ...row },
+    };
   }
 
-
-  deleteRow(table: TableRow[], index: number): void {
-    table.splice(index, 1);
-  }
-
-  sortTable(table: TableRow[]): void {
-    if (table === this.table1) {
-      this.table1.sort((a, b) => a.weight - b.weight);
-    } else if (table === this.table2) {
-      this.table2.sort((a, b) => a.price - b.price);
+  saveEditing(tableKey: string, row: TableRow): void {
+    const editingState = this.editingStates[tableKey];
+    if (editingState.editingRow) {
+      Object.assign(row, editingState.editingRow);
+      editingState.editingRow = null;
+      editingState.editingIndex = null;
     }
   }
- 
+
+  cancelEditing(tableKey: string): void {
+    const editingState = this.editingStates[tableKey];
+    editingState.editingRow = null;
+    editingState.editingIndex = null;
+  }
+
+  addRow(tableKey: string): void {
+    const newRow: TableRow = { name: '', price: 0, weight: 0 };
+    this.tables[tableKey].push(newRow);
+    this.editingStates[tableKey] = {
+      editingIndex: this.tables[tableKey].length - 1,
+      editingRow: { ...newRow },
+    };
+  }
+
+
+  deleteRow(tableKey: string, index: number): void {
+    this.tables[tableKey].splice(index, 1);
+  }
+
+  sortTable(tableKey: string, sortBy: 'price' | 'weight'): void {
+    const table = this.tables[tableKey];
+    table.sort((a, b) => a[sortBy] - b[sortBy]);
+  }
+
   calculateTotalPrice(): void {
-    const sumTable1 = this.table1.reduce((sum, row) => sum + row.price, 0);
-    const sumTable2 = this.table2.reduce((sum, row) => sum + row.price, 0);
-    // return sumTable1 + sumTable2;
-    this.totalPrice = sumTable1 + sumTable2
+    let total = 0;
+    for (const tableKey in this.tables) {
+      const sum = this.tables[tableKey].reduce((sum, row) => sum + row.price, 0);
+      total += sum;
+    }
+    this.totalPrice = total;
   }
 }

@@ -1,56 +1,43 @@
-<div>
-    <h1>Table 1 (Sort by Weight)</h1>
+<div *ngFor="let tableKey of ['table1', 'table2']">
+    <h1>{{ tableKey | titlecase }} (Sort by {{ tableKey === 'table1' ? 'Weight' : 'Price' }})</h1>
+    <button (click)="addRow(tableKey)">Add Row</button>
+    <button (click)="sortTable(tableKey, tableKey === 'table1' ? 'weight' : 'price')">Sort by {{ tableKey === 'table1' ? 'Weight' : 'Price' }}</button>
     <table border="1">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Weight</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let row of table1; let i = index">
-                <td><input [(ngModel)]="row.name" /></td>
-                <td><input [(ngModel)]="row.price" type="number" /></td>
-                <td><input [(ngModel)]="row.weight" type="number" /></td>
-                <td>
-                    <button (click)="deleteRow(table1, i)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Weight</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of tables[tableKey]; let i = index">
+          <ng-container *ngIf="editingStates[tableKey].editingIndex !== i">
+            <td>{{ row.name }}</td>
+            <td>{{ row.price }}</td>
+            <td>{{ row.weight }}</td>
+            <td>
+              <button (click)="startEditing(tableKey, i, row)">Edit</button>
+              <button (click)="deleteRow(tableKey, i)">Delete</button>
+            </td>
+          </ng-container>
+          <ng-container *ngIf="editingStates[tableKey].editingIndex === i">
+            <td><input [(ngModel)]="editingStates[tableKey].editingRow!.name" /></td>
+            <td><input [(ngModel)]="editingStates[tableKey].editingRow!.price" type="number" /></td>
+            <td><input [(ngModel)]="editingStates[tableKey].editingRow!.weight" type="number" /></td>
+            <td>
+              <button (click)="saveEditing(tableKey, row)">Save</button>
+              <button (click)="cancelEditing(tableKey)">Cancel</button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
     </table>
-    <button (click)="addRow(table1)">Add Row</button>
-    <button (click)="sortTable(table1)">Sort by Weight</button>
-</div>
-
-<div>
-    <h1>Table 2 (Sort by Price)</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Weight</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let row of table2; let i = index">
-                <td><input [(ngModel)]="row.name" /></td>
-                <td><input [(ngModel)]="row.price" type="number" /></td>
-                <td><input [(ngModel)]="row.weight" type="number" /></td>
-                <td>
-                    <button (click)="deleteRow(table2, i)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <button (click)="addRow(table2)">Add Row</button>
-    <button (click)="sortTable(table2)">Sort by Price</button>
-</div>
-
-<div>
-    <button (click)="calculateTotalPrice()"> calculate total price</button>
-    <h2>Total Price: {{ totalPrice !== null ? totalPrice : '---' }} </h2>
-</div>
+  </div>
+  
+  <div class="calculate-container">
+    <button (click)="calculateTotalPrice()">Calculate Total Price</button>
+    <h2>Total Price: {{ totalPrice !== null ? totalPrice : '---' }}</h2>
+  </div>
+  
