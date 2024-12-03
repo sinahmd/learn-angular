@@ -1,0 +1,56 @@
+<div>
+    <h1>Table 1 (Sort by Weight)</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Weight</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of table1; let i = index">
+                <td><input [(ngModel)]="row.name" /></td>
+                <td><input [(ngModel)]="row.price" type="number" /></td>
+                <td><input [(ngModel)]="row.weight" type="number" /></td>
+                <td>
+                    <button (click)="deleteRow(table1, i)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button (click)="addRow(table1)">Add Row</button>
+    <button (click)="sortTable(table1)">Sort by Weight</button>
+</div>
+
+<div>
+    <h1>Table 2 (Sort by Price)</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Weight</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of table2; let i = index">
+                <td><input [(ngModel)]="row.name" /></td>
+                <td><input [(ngModel)]="row.price" type="number" /></td>
+                <td><input [(ngModel)]="row.weight" type="number" /></td>
+                <td>
+                    <button (click)="deleteRow(table2, i)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button (click)="addRow(table2)">Add Row</button>
+    <button (click)="sortTable(table2)">Sort by Price</button>
+</div>
+
+<div>
+    <button (click)="calculateTotalPrice()"> calculate total price</button>
+    <h2>Total Price: {{ totalPrice !== null ? totalPrice : '---' }} </h2>
+</div>

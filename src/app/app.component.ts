@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { ProductListComponent } from './product-list/product-list.component';
 import { FormsModule } from '@angular/forms';
 import { TwoWayBindingComponent } from './two-way-binding/two-way-binding.component';
+import { TablesComponent } from './tables/tables.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ProductListComponent, FormsModule, TwoWayBindingComponent],
+  imports: [RouterOutlet, ProductListComponent, FormsModule, TwoWayBindingComponent, TablesComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
